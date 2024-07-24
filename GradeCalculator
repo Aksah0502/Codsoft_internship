@@ -1,0 +1,51 @@
+import java.util.Scanner;
+public class GradeCalculator {
+    public static void main(String[] args){
+        Scanner GC = new Scanner(System.in);
+
+        System.out.println("Welcome! This is a 'Grade Calculator' to help you");
+        System.out.println("Enter the marks of first subject : ");
+        float a =  GC.nextInt();
+        System.out.println("Enter the marks of Second subject : ");
+        float b =  GC.nextInt();
+        System.out.println("Enter the marks of third subject : ");
+        float c =  GC.nextInt();
+        System.out.println("Enter the marks of fourth subject : ");
+        float d =  GC.nextInt();
+        System.out.println("Enter the marks of fifth subject : ");
+        float e =  GC.nextInt();
+
+        float TotalMarks = a+b+c+d+e;
+
+        System.out.println("Total marks obtained = " + TotalMarks);
+        float p = TotalMarks/5;
+        System.out.println("Percentage obtained = " + p);
+
+        if(p>=90){
+            System.out.println("Grade = A+");
+        }
+        else if(p>=80){
+            System.out.println("Grade = A");
+        }
+        else if(p>=70){
+            System.out.println("Grade = B+");
+        }
+        else if(p>=60){
+            System.out.println("Grade = B");
+        }
+        else if(p>=50){
+            System.out.println("Grade = C");
+        }
+        else if(p>=40){
+            System.out.println("Grade = D");
+        }
+        else if(p>=33){
+            System.out.println("Grade = E");
+        }
+
+        else{
+            System.out.println("No Grade Can Be Assigned");
+        }
+
+    }
+}
