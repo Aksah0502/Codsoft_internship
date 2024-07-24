@@ -1,0 +1,63 @@
+import java.util.Scanner;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import org.json.JSONObject;
+
+class PersonalizedCurrencyConverter {
+
+    private static final String API_URL = "https://api.exchangerate-api.com/v4/latest/";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("CURRENCY CONVERTER");
+
+        System.out.print("Enter base currency (e.g., USD, INR): ");
+        String baseCurrency = scanner.nextLine().toUpperCase();
+
+        System.out.print("Enter target currency (e.g., USD, INR): ");
+        String targetCurrency = scanner.nextLine().toUpperCase();
+
+        System.out.print("Enter amount to convert: ");
+        double amount = scanner.nextDouble();
+
+        double exchangeRate = fetchExchangeRate(baseCurrency, targetCurrency);
+        if (exchangeRate != -1) {
+            double convertedAmount = amount * exchangeRate;
+            System.out.printf("%.2f %s is equivalent to %.2f %s%n", amount, baseCurrency, convertedAmount, targetCurrency);
+        } else {
+            System.out.println("Error fetching exchange rate.");
+        }
+    }
+
+    private static double fetchExchangeRate(String fromCurrency, String toCurrency) {
+        try {
+            URL url = new URL(API_URL + fromCurrency);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                connection.disconnect();
+
+                JSONObject json = new JSONObject(content.toString());
+                return json.getJSONObject("rates").getDouble(toCurrency);
+            } else {
+                System.out.println("Error: Received HTTP response code " + responseCode);
+                return -1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+}
